@@ -1,0 +1,13 @@
+langchain==0.3.0
+langchain-core
+langchain-community
+langchain-openai
+langchain-chroma
+chromadb
+llama-parse
+fastembed
+python-dotenv
+pymupdf
+fastapi
+uvicorn
+streamlit
