@@ -1,0 +1,12 @@
+fastapi==0.128.0
+fitz==0.0.1.dev2
+langchain_chroma==1.1.0
+langchain_community==0.4.1
+langchain_core==1.2.7
+langchain_google_genai==4.2.0
+langchain_openai==1.1.7
+langchain_text_splitters==1.1.0
+llama_parse==0.6.91
+pydantic==2.12.5
+python-dotenv==1.2.1
+streamlit==1.52.2
