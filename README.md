@@ -6,10 +6,7 @@ Lexicognition-AI is a cutting-edge application designed to enhance the examinati
 
 Check out the demo video below to see Lexicognition-AI in action:
 
-<video width="100%" controls>
-  <source src="assets/demo.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+[Demo Video](https://raw.githubusercontent.com/shadowbeast0/lexicognition-AI/main/assets/demo.mp4)
 
 ## Contributions
 
