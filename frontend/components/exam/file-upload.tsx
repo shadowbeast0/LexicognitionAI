@@ -15,7 +15,7 @@ interface FileUploadProps {
 export function FileUpload({ onFileUpload, isUploading, processingStatus }: FileUploadProps) {
   const [isDragging, setIsDragging] = useState(false)
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
-  const [visionEnabled, setVisionEnabled] = useState(true)
+  const [visionEnabled, setVisionEnabled] = useState(false)
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
     e.preventDefault()
@@ -190,19 +190,53 @@ export function FileUpload({ onFileUpload, isUploading, processingStatus }: File
 
 function ProcessingStep({ text, isActive, isComplete }: { text: string; isActive: boolean; isComplete: boolean }) {
   return (
-    <div className="flex items-center gap-3">
+    <motion.div
+      initial={{ opacity: 0, x: -10 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.3 }}
+      className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all duration-300 ${
+        isActive
+          ? "bg-white/10 backdrop-blur-sm shadow-lg shadow-primary/20"
+          : isComplete
+            ? "bg-success/5"
+            : "bg-transparent"
+      }`}
+    >
       {isComplete ? (
-        <CheckCircle2 className="w-4 h-4 text-success shrink-0" />
+        <motion.div
+          initial={{ scale: 0, rotate: -180 }}
+          animate={{ scale: 1, rotate: 0 }}
+          transition={{ duration: 0.4, type: "spring", stiffness: 200 }}
+        >
+          <CheckCircle2 className="w-5 h-5 text-success shrink-0" />
+        </motion.div>
       ) : isActive ? (
-        <Loader2 className="w-4 h-4 text-primary animate-spin shrink-0" />
+        <motion.div
+          animate={{ rotate: 360 }}
+          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+        >
+          <Loader2 className="w-5 h-5 text-primary shrink-0" />
+        </motion.div>
       ) : (
-        <div className="w-4 h-4 rounded-full border border-muted-foreground/30 shrink-0" />
+        <div className="w-5 h-5 rounded-full border-2 border-muted-foreground/30 shrink-0" />
       )}
-      <span
-        className={`text-sm ${isActive ? "text-foreground" : isComplete ? "text-muted-foreground" : "text-muted-foreground/50"}`}
+      <motion.span
+        animate={
+          isActive
+            ? { color: ["rgba(255, 255, 255, 0.8)", "rgba(255, 255, 255, 1)"] }
+            : { color: isComplete ? "rgba(255, 255, 255, 0.6)" : "rgba(255, 255, 255, 0.4)" }
+        }
+        transition={isActive ? { duration: 0.8, repeat: Infinity, repeatType: "reverse" } : { duration: 0.3 }}
+        className={`text-sm font-medium transition-all duration-300 ${
+          isActive
+            ? "text-white"
+            : isComplete
+              ? "text-muted-foreground"
+              : "text-muted-foreground/50"
+        }`}
       >
         {text}
-      </span>
-    </div>
+      </motion.span>
+    </motion.div>
   )
 }
