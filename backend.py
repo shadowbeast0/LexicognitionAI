@@ -2,12 +2,12 @@ import shutil
 import os
 import re
 import traceback
+import json
 from fastapi import FastAPI, UploadFile, File, HTTPException, Form
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
-from typing import Optional
-
-# --- IMPORT YOUR EXISTING LOGIC ---
+from typing import Optional, AsyncGenerator
 from src.rag import create_retriever_pipeline
 from src.examiner import generate_questions, grade_answer, generate_followup_question
 from src.rag.retrieve import get_precise_references  # For crisp evidence
@@ -76,10 +76,9 @@ async def reset_session():
 @app.post("/upload_pdf")
 async def upload_pdf(
     file: UploadFile = File(...),
-    # 2. ADD this parameter to receive the toggle state
     enable_vision: bool = Form(True) 
 ):
-    """Handles PDF upload and initializes the RAG pipeline."""
+    """Handles PDF upload and initializes the RAG pipeline with streaming progress."""
     try:
         print(f"📥 Receiving file: {file.filename} (Vision Enabled: {enable_vision})")
         temp_filename = "temp_exam_file.pdf"
@@ -87,29 +86,46 @@ async def upload_pdf(
         
         with open(temp_filename, "wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
-            
-        # 3. PASS the flag to your pipeline
-        # (Ensure create_retriever_pipeline in src/rag/__init__.py accepts this arg as per previous step)
-        retriever = create_retriever_pipeline(
-            temp_filename, 
-            original_filename, 
-            enable_vision=enable_vision
-        )
         
-        SESSION_STATE["retriever"] = retriever
+        async def generate_progress():
+            """Generator function to send progress updates."""
+            try:
+                # Step 1: Reading PDF Bytes
+                yield f'data: {json.dumps({"status": "reading", "message": "Reading PDF Bytes..."})}\n\n'
+                
+                # Step 2: Ingesting Text & Visuals (LlamaParse)
+                yield f'data: {json.dumps({"status": "parsing", "message": "Ingesting Text & Visuals (LlamaParse)..."})}\n\n'
+                
+                # Perform the pipeline
+                retriever = create_retriever_pipeline(
+                    temp_filename, 
+                    original_filename, 
+                    enable_vision=enable_vision
+                )
+                
+                SESSION_STATE["retriever"] = retriever
+                
+                # Step 3: Constructing Atomic Index
+                yield f'data: {json.dumps({"status": "indexing", "message": "Constructing Atomic Index..."})}\n\n'
+                
+                # Step 4: Generating Conceptual Questions
+                yield f'data: {json.dumps({"status": "generating", "message": "Generating Conceptual Questions..."})}\n\n'
+                
+                questions = generate_questions(retriever)
+                SESSION_STATE["questions"] = questions
+                SESSION_STATE["current_q_index"] = 0
+                SESSION_STATE["history"] = []
+                
+                print(f"✅ Exam Ready! Generated {len(questions)} questions.")
+                
+                # Final response with complete data
+                yield f'data: {json.dumps({"status": "complete", "message": "Complete", "data": {"status": "ready", "total_questions": len(questions), "first_question": questions[0]}})}\n\n'
+                
+            except Exception as e:
+                traceback.print_exc()
+                yield f'data: {json.dumps({"status": "error", "message": str(e)})}\n\n'
         
-        questions = generate_questions(retriever)
-        SESSION_STATE["questions"] = questions
-        SESSION_STATE["current_q_index"] = 0
-        SESSION_STATE["history"] = []
-        
-        print(f"✅ Exam Ready! Generated {len(questions)} questions.")
-        
-        return {
-            "status": "ready",
-            "total_questions": len(questions),
-            "first_question": questions[0]
-        }
+        return StreamingResponse(generate_progress(), media_type="text/event-stream")
         
     except Exception as e:
         traceback.print_exc()
