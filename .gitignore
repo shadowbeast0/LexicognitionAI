@@ -15,6 +15,7 @@ build/
 myenv/
 *.env
 *.venv
+*.venv311
 
 # Jupyter Notebook
 .ipynb_checkpoints/

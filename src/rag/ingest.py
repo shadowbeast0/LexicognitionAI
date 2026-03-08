@@ -1,6 +1,9 @@
 import os
 import tempfile
-import fitz  # PyMuPDF
+try:
+    import pymupdf as fitz  # PyMuPDF (preferred)
+except ImportError:
+    import fitz  # Backward compatibility alias
 from llama_parse import LlamaParse
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_core.documents import Document
