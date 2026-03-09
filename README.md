@@ -25,7 +25,7 @@ Check out the demo video below to see Lexicognition-AI in action:
 ### Backend
 
 - **AI-Powered Examination**: Supports ingestion, retrieval, and storage of examination data.
-- **RAG (Retrieve-Answer-Generate) Pipeline**: Implements a pipeline for efficient data handling.
+- **RAG (Retrieval-Augemented-Generation) Pipeline**: Implements a pipeline for efficient data handling.
 - **Utilities**: Includes mock data and helper functions.
 
 ## Tech Stack
@@ -110,6 +110,7 @@ This project is licensed under the MIT License. See the LICENSE file for details
 
 - Inspired by advancements in AI and modern web development.
 - Built with Next.js, Python, and Three.js.
+
 
 
 
