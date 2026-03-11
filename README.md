@@ -26,7 +26,7 @@ Check out the demo below:
 
 ## Table of Contents
 
-- [Why Lexicognition AI](#why-lexicognition-ai)
+- [Why ByteMe](#why-lexicognition-ai)
 - [Core Capabilities](#core-capabilities)
 - [System Architecture](#system-architecture)
 - [Mathematical Formalization](#mathematical-formalization)
@@ -325,6 +325,7 @@ Team acknowledgment: Arka Dutta is part of Team ByteMe's winning lineup for Lexi
 ## License
 
 This project is licensed under the MIT License. See [LICENSE](LICENSE).
+
 
 
 
