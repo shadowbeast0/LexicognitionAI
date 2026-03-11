@@ -307,17 +307,11 @@ Notes:
 - Perfect-answer caching avoids recomputation for repeated grading on same question.
 - Upload processing uses SSE for incremental UX updates.
 
-## Contributing
-
-1. Fork the repository.
-2. Create a feature branch.
-3. Commit your changes with clear messages.
-4. Push your branch.
-5. Open a pull request.
 
 ## License
 
 This project is licensed under the MIT License. See [LICENSE](LICENSE).
+
 
 
 
