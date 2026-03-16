@@ -9,10 +9,11 @@
 Lexicognition AI is a production-style AI viva-voce platform that transforms a PDF research paper into an adaptive oral examination flow with evidence-grounded grading.
 
 It combines:
+
 - A FastAPI backend with streaming ingestion progress (SSE)
 - A Retrieval-Augmented Generation (RAG) stack with Chroma
 - LLM-driven question generation, critique-based grading, and follow-up probing
-- A modern Next.js interface 
+- A modern Next.js interface
 
 ## Championship Announcement
 
@@ -52,11 +53,13 @@ Traditional viva workflows are hard to scale and difficult to standardize. Lexic
 ## Core Capabilities
 
 ### 1) AI Examination Pipeline
+
 - Upload PDF and initialize indexing pipeline via backend streaming endpoint
 - Generate 5 core conceptual questions from retrieved context
 - Conditionally generate a 6th visual-analysis question if conceptual diagrams are detected
 
 ### 2) Strict Grading Engine
+
 - Creates atomic propositions from retrieved evidence
 - Extracts mandatory technical keywords and causal logic constraints
 - Generates a concise ideal baseline answer
@@ -67,16 +70,19 @@ Traditional viva workflows are hard to scale and difficult to standardize. Lexic
   - conceptual gap critique
 
 ### 3) Follow-up Intelligence
+
 - One-click generation of targeted follow-up question based on the most recent critique
 - Follow-up depth control to avoid repetitive interrogation loops
 
 ### 4) Rich Frontend Experience
+
 - Real-time upload progress with staged parsing/indexing/generation status
 - Chat-based viva interface with retry, skip, follow-up, and next-question controls
 - Evidence sidebar, markdown + math rendering, polished motion transitions
 - 3D visual modules for experiential UI polish
 
 ### 5) Dual Interface Availability
+
 - **Next.js app** for full web experience
 - **Streamlit app** for rapid interactive viva board usage
 
@@ -120,6 +126,7 @@ Retriever (k=8)
 ## Mathematical Formalization
 
 Let:
+
 - $q_i$ = question $i$
 - $D_i = \{d_1, d_2, ..., d_k\}$ be retrieved chunks for $q_i$
 - $A(D_i)$ be atomic proposition extraction
@@ -162,9 +169,11 @@ where $q_i'$ is a targeted probing question on the detected conceptual gap.
 ## API Design
 
 ### `GET /`
+
 Health check endpoint.
 
 ### `POST /upload_pdf`
+
 Initializes ingestion + retrieval pipeline.
 
 - Form fields:
@@ -173,6 +182,7 @@ Initializes ingestion + retrieval pipeline.
 - Response: `text/event-stream` with staged status updates and final ready payload.
 
 ### `POST /submit_answer`
+
 Grades an answer and advances question state.
 
 Request body:
@@ -186,20 +196,24 @@ Request body:
 ```
 
 Returns:
+
 - `grade_data` (feedback, score, perfect answer, evidence)
 - `next_question`
 - `is_finished`
 - `is_skip`
 
 ### `POST /generate_followup`
+
 Generates one targeted follow-up question using last question/answer/critique context.
 
 ### `POST /reset`
+
 Resets in-memory session and clears temporary upload file.
 
 ## Tech Stack
 
 ### Frontend
+
 - Next.js 16 (App Router)
 - React 19 + TypeScript
 - Tailwind CSS v4
@@ -208,6 +222,7 @@ Resets in-memory session and clears temporary upload file.
 - Markdown rendering with GFM + KaTeX
 
 ### Backend
+
 - FastAPI + Uvicorn
 - Streamlit (alternate UI runtime)
 - LangChain components
@@ -253,20 +268,26 @@ myenv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-### 2) Frontend Dependencies
+### 2) Conda Environment
+
+```bash
+conda env create -f environment.yml
+```
+
+### 3) Frontend Dependencies
 
 ```bash
 cd frontend
 npm install
 ```
 
-### 3) Start Backend (FastAPI)
+### 4) Start Backend (FastAPI)
 
 ```bash
 uvicorn backend:app --reload --port 8000
 ```
 
-### 4) Start Frontend
+### 5) Start Frontend
 
 ```bash
 cd frontend
@@ -292,6 +313,7 @@ LLAMA_CLOUD_API_KEY=your_llamacloud_key
 ```
 
 Notes:
+
 - `OPENROUTER_API_KEY` is required for core LLM operations.
 - `GOOGLE_API_KEY` is required only when visual analysis is enabled.
 - `LLAMA_CLOUD_API_KEY` is required for LlamaParse ingestion.
@@ -307,16 +329,6 @@ Notes:
 - Perfect-answer caching avoids recomputation for repeated grading on same question.
 - Upload processing uses SSE for incremental UX updates.
 
-
 ## License
 
 This project is licensed under the MIT License. See [LICENSE](LICENSE).
-
-
-
-
-
-
-
-
-
