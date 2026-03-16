@@ -37,7 +37,7 @@ Follow these steps to set up the Lexicognition-AI project on your local machine.
 
    Create a `.env` file in the root directory and add the following API keys:
    - **Google API Key**:
-     - Obtain from: [Google API Key](https://aistudio.google.com/?timeRange=last-28-days)
+     - Obtain from: [Google API Key](https://aistudio.google.com/api-keys)
      - Enable the Gemini API
      - Add to `.env`: `GOOGLE_API_KEY=your_key_here`
    - **OpenRouter API Key**:
