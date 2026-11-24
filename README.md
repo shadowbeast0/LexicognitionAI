@@ -15,6 +15,12 @@ It combines:
 - LLM-driven question generation, critique-based grading, and follow-up probing
 - A modern Next.js interface
 
+## Live Demo
+
+**https://shadowbeast0.github.io/LexicognitionAI/**
+
+The hosted version runs the whole pipeline in your browser. Open **API keys**, add your OpenRouter key (required), plus optional Google AI Studio (diagram reading) and LlamaCloud (LlamaParse) keys, then upload a PDF. Keys are stored only in your browser and sent directly to each provider.
+
 ## Championship Announcement
 
 Our Team **ByteMe**, led by **Arjeesh Palai**, and team members **Arko Dasgupta**, **Sombrata Biswas**, and **Arka Dutta** bagged the **1st Prize** in the event **Lexicognition AI**, conducted by the annual techno-management fest of **IIT Kharagpur, Kshitij 2026**, and sponsored by **Microsoft**.

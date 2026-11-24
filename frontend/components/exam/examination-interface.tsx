@@ -1,5 +1,6 @@
 "use client"
 
+import { generateFollowup, submitAnswer } from "@/lib/engine"
 import type React from "react"
 import { useState, useRef, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
@@ -92,23 +93,11 @@ export function ExaminationInterface({ documentName, onReset, initialExamData }:
     setGradeResult(null)
 
     try {
-      const response = await fetch('http://localhost:8000/submit_answer', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          answer: answer,
-          question_context: (isFollowUp || isRetry) ? currentQuestionText : null,
-          is_retry_or_followup: isFollowUp || isRetry,
-        }),
+      const data = await submitAnswer({
+        answer: answer,
+        question_context: (isFollowUp || isRetry) ? currentQuestionText : null,
+        is_retry_or_followup: isFollowUp || isRetry,
       })
-
-      if (!response.ok) {
-        throw new Error('Submit failed')
-      }
-
-      const data = await response.json()
 
       // Process grade data
       const gradeData = data.grade_data
@@ -176,21 +165,7 @@ export function ExaminationInterface({ documentName, onReset, initialExamData }:
     setIsTyping(true)
 
     try {
-      const response = await fetch('http://localhost:8000/generate_followup', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          feedback: gradeResult?.feedback || "Please provide a follow-up question",
-        }),
-      })
-
-      if (!response.ok) {
-        throw new Error('Followup failed')
-      }
-
-      const data = await response.json()
+      const data = await generateFollowup()
 
       const followUpMessage: Message = {
         id: `followup-${Date.now()}`,
@@ -246,23 +221,11 @@ export function ExaminationInterface({ documentName, onReset, initialExamData }:
     }
 
     try {
-      const response = await fetch('http://localhost:8000/submit_answer', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          answer: "USER_SKIPPED_THOUGHTFULLY",
-          question_context: currentQuestionText,
-          is_retry_or_followup: false,
-        }),
+      const data = await submitAnswer({
+        answer: "USER_SKIPPED_THOUGHTFULLY",
+        question_context: currentQuestionText,
+        is_retry_or_followup: false,
       })
-
-      if (!response.ok) {
-        throw new Error('Skip failed')
-      }
-
-      const data = await response.json()
 
       const skipExaminerMsg: Message = {
         id: `skip-examiner-${Date.now()}`,
